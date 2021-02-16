@@ -43,8 +43,6 @@ public class interfaz {
     }
 }
 
-
-
 class LaminaImagen extends JPanel 
 {
     private Image imagen;
@@ -90,16 +88,14 @@ class LaminaBoton extends JPanel implements ActionListener
         setBounds(700,0,300,500);
         setLayout(null);
 
-
-        boton.setBounds(0,100,100,25);
+        boton.setBounds(0,150,100,25);
         add(boton);
 
-        Ayuda.setBounds(0,150,100,25);
+        Ayuda.setBounds(0,200,100,25);
         add(Ayuda);
 
-        AcercaDe.setBounds(0,200,100,25);
+        AcercaDe.setBounds(0,250,100,25);
         add(AcercaDe);
-
 
         boton.addActionListener(this);
         Ayuda.addActionListener(this);
@@ -130,7 +126,7 @@ class LaminaBoton extends JPanel implements ActionListener
             AcercaFrame.setBounds(0,0,500,500);
             AcercaFrame.setTitle("Acerca De");    
             AcercaFrame.add(label);        
-        }           
+        }                  
     }
 }
 
@@ -147,8 +143,8 @@ class LaminaMenu extends JMenuBar implements ActionListener
     private JMenuItem opc2 = new JMenuItem("Salir");  
 
     //Opciones de Options
-    private JMenuItem opc3 = new JMenuItem("Opcion 1");
-    private JFrame opc3Frame = new JFrame();   
+    private JMenuItem opc3 = new JMenuItem("Simulador");       
+    private SimuladorFrame opc3Frame = new SimuladorFrame();   
     private JMenuItem opc4 = new JMenuItem("Opcion 2");
     private JFrame opc4Frame = new JFrame();   
 
@@ -186,8 +182,6 @@ class LaminaMenu extends JMenuBar implements ActionListener
         else if(e.getSource() == opc3)
         {
             opc3Frame.setVisible(true);
-            opc3Frame.setBounds(0,0,500,500);
-            opc3Frame.setTitle("Opcion 1");  
         }
 
         else if(e.getSource() == opc4)
