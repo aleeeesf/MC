@@ -2,11 +2,10 @@ import java.util.ArrayList;
 
 public class randomGenerator
 {
-    public static ArrayList<Double> Generados = new ArrayList<Double>();
-    public int nNumeros;
-    int semilla;    
+    private static ArrayList<Double> Generados = new ArrayList<Double>();
+    private long nNumeros, semilla;   
 
-    public randomGenerator(int n, int seed)
+    public randomGenerator(long n, long seed)
     {
         this.nNumeros = n;
         this.semilla = seed;
@@ -20,13 +19,13 @@ public class randomGenerator
     public void x261a()
     {
         Generados.clear();
-        int cont = 0, rand; 
-        final int m = (int)Math.pow(2, 5);
-        
+        long cont = 0, rand; 
+        final int m = (int)Math.pow(2, 5);        
 
         while(cont < nNumeros)
         {
-            rand = (int)((((5*semilla)) % m));
+            rand = (long)((((5*semilla)) % m));
+            //System.out.println(rand);
             Generados.add((double)rand/m);
             cont++;
             semilla = rand;
@@ -36,12 +35,12 @@ public class randomGenerator
     public void x261b()
     {
         Generados.clear();
-        int cont = 0, rand; 
+        long cont = 0, rand; 
         final int m = (int)Math.pow(2, 5);
 
         while(cont < nNumeros)
         {
-            rand = (int)((((7*semilla)) % m));
+            rand = (long)((((7*semilla)) % m));
             Generados.add((double)rand/m);
             cont++;
             semilla = rand;
@@ -50,12 +49,13 @@ public class randomGenerator
 
     public void x262()
     {
-        int cont = 0, rand;
+        Generados.clear();
+        long cont = 0, rand;
         final int m = 31; 
         
         while(cont < nNumeros)
         {
-            rand = (int)((((3*semilla)) % m));
+            rand = (long)((((3*semilla)) % m));
             System.out.println(rand);
             Generados.add((double)rand/m);
             cont++;
@@ -65,12 +65,13 @@ public class randomGenerator
 
     public void x263()
     {
-        int cont = 0, rand, B = (int)Math.pow(7, 5);  
-        final int m = (int)Math.pow(2,31) - 1; 
+        Generados.clear();
+        long cont = 0, B = (long)Math.pow(7, 5), rand;  
+        final long m = (long)Math.pow(2,31) - 1; 
         
         while(cont < nNumeros)
         {
-            rand = (int)((((B*semilla)) % m));
+            rand = (long)((((B*semilla)) % m));
             System.out.println(rand);
             Generados.add((double)rand/m);
             cont++;
@@ -80,15 +81,16 @@ public class randomGenerator
 
     public void combinado()
     {
-        int x, y, w, rand, semilla_x, semilla_y, cont = 0;
+        Generados.clear();
+        long x, y, w, semilla_x, semilla_y, cont = 0;
 
         semilla_x = semilla;
         semilla_y = semilla;
 
         while(cont < nNumeros)
         {
-            x = (int)((((40014*semilla_x)) % 2147483563));
-            y = (int)((((40692*semilla_y)) % 21));
+            x = (long)((((40014*semilla_x)) % 2147483563));
+            y = (long)((((40692*semilla_y)) % 2147483399));
 
             w = (Math.abs(x-y)) % 2147483562;
 
@@ -102,12 +104,13 @@ public class randomGenerator
 
     public void Fishman()
     {
-        int cont = 0, rand; 
-        final int m = (int)Math.pow(2,31) - 1; 
+        Generados.clear();
+        long cont = 0, rand; 
+        final long m = (long)Math.pow(2,31) - 1; 
         
         while(cont < nNumeros)
         {
-            rand = (int)((((48271*semilla)) % m));
+            rand = (long)((((48271*semilla)) % m));
             System.out.println(rand);
             Generados.add((double)rand/m);
             cont++;
@@ -118,12 +121,13 @@ public class randomGenerator
 
     public void Moore()
     {
-        int cont = 0, rand; 
-        final int m = (int)Math.pow(2,31) - 1; 
+        Generados.clear();
+        long cont = 0, rand; 
+        final long m = (long)Math.pow(2,31) - 1; 
         
         while(cont < nNumeros)
         {
-            rand = (int)((((69621*semilla)) % m));
+            rand = (long)((((69621*semilla)) % m));
             System.out.println(rand);
             Generados.add((double)rand/m);
             cont++;
@@ -134,13 +138,14 @@ public class randomGenerator
 
     public void Randu()
     {
-        int cont = 0, rand, B = (int)Math.pow(2,16) + 3; 
-        final int m = (int)Math.pow(2,31) + 1; 
+        Generados.clear();
+        long cont = 0, rand, B = (long)Math.pow(2,16) + 3; 
+        final long m = (long)Math.pow(2,31) + 1; 
         
         while(cont < nNumeros)
         {
-            rand = (int)((((B*semilla)) % m));
-            System.out.println(rand);
+            rand = (long)((((B*semilla)) % m));
+            System.out.println((double)rand/m);
             Generados.add((double)rand/m);
             cont++;
             semilla = rand;
@@ -149,8 +154,8 @@ public class randomGenerator
 
     public static void main(String args[])
     {
-        randomGenerator r = new randomGenerator(20, 1);
-        r.Randu();
+        randomGenerator r = new randomGenerator(50, 1);
+        r.Fishman();
 /*
         for(int i = 0; i < 10; i++)
         {

@@ -23,6 +23,7 @@ public class interfaz {
         //Icono de la aplicación
         ImageIcon icon = new ImageIcon("rocket.png");
 
+        //Ventana Principal
         JFrame frame = new JFrame();               
         frame.setTitle("Interfaz");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,6 +44,7 @@ public class interfaz {
     }
 }
 
+
 class LaminaImagen extends JPanel 
 {
     private Image imagen;
@@ -50,6 +52,7 @@ class LaminaImagen extends JPanel
     LaminaImagen()
     {
         super();
+        //Res 600x500
         setBounds(0,0,600,500);
         setLayout(null);
     }
@@ -78,6 +81,7 @@ class LaminaBoton extends JPanel implements ActionListener
     private JButton Ayuda = new JButton("Ayuda");
     private JButton AcercaDe = new JButton("Acerca De");
 
+    //Frames que ejecutan los botones
     private JFrame EjecutarFrame = new JFrame();
     private JFrame AyudaFrame = new JFrame();
     private JFrame AcercaFrame = new JFrame();
@@ -130,8 +134,6 @@ class LaminaBoton extends JPanel implements ActionListener
     }
 }
 
-
-
 class LaminaMenu extends JMenuBar implements ActionListener
 {
     private JMenu file = new JMenu("Archivo");
@@ -143,7 +145,7 @@ class LaminaMenu extends JMenuBar implements ActionListener
     private JMenuItem opc2 = new JMenuItem("Salir");  
 
     //Opciones de Options
-    private JMenuItem opc3 = new JMenuItem("Simulador");       
+    private JMenuItem opc3 = new JMenuItem("Generador");       
     private SimuladorFrame opc3Frame = new SimuladorFrame();   
     private JMenuItem opc4 = new JMenuItem("Opcion 2");
     private JFrame opc4Frame = new JFrame();   
