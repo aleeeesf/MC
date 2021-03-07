@@ -9,9 +9,7 @@ import java.util.ArrayList;
 
 public class ca1DSim extends JFrame {
     
-    public static AutomataCelular automata = new AutomataCelular(); 
-    private LaminaSeleccion lamina = new LaminaSeleccion();
-
+    public 
     public ca1DSim()
     {
         super();
@@ -19,18 +17,20 @@ public class ca1DSim extends JFrame {
     }
 
     private void iniciar()
-    {                     
-        setTitle("Automata Celular 1D");
+    {       
+
+        LaminaSeleccion lamina = new LaminaSeleccion();
+                      
+        setTitle("Generador Num.Aleatorios");
         setBounds(100,100,1200,700);
         setResizable(false);
         setLayout(null);
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         add(lamina); 
-        add(automata);         
+        add(automata); 
     }
-
     public static void main(String[] args)
     {
         
@@ -48,32 +48,8 @@ public class ca1DSim extends JFrame {
     }
 }
 
-class ThreadAutomata implements Runnable
-{
-    private static Component componente;
-    private int k, regla, generaciones;
-    private boolean frontera, configuracion;
-
-    public ThreadAutomata(Component componente_,int k_, int regla_, int generaciones_, boolean frontera_, boolean configuracion_)
-    {
-        componente = componente_;
-        this.k = k_;
-        this.regla = regla_;
-        this.generaciones = generaciones_;
-        this.frontera = frontera_;
-        this.configuracion = configuracion_;
-    }
-
-    public void run()
-    {        
-        ca1DSim.automata.recargar(k,regla,generaciones,frontera,configuracion); 
-        ca1DSim.automata.paint(componente.getGraphics());
-    }
-}
-
 class LaminaSeleccion extends JPanel implements ActionListener
 {
-    private static Thread t;
     private JTextField intrEstado = new JTextField(12);    
     private JTextField intrFuncion = new JTextField(12); 
     private JTextField intrGeneraciones = new JTextField(12); 
@@ -99,11 +75,12 @@ class LaminaSeleccion extends JPanel implements ActionListener
 
     private ArrayList<Double> randList = new ArrayList<Double>();
     private randomGenerator rg;
- 
+
+    private AutomataCelular grafico = new AutomataCelular();
+
     public LaminaSeleccion()
     {
-        setBounds(0,0,275,700);
-        setBackground(Color.blue);
+        setBounds(0,0,1200,700);
         setLayout(null);
 
         //Izquierda Arriba
@@ -151,11 +128,14 @@ class LaminaSeleccion extends JPanel implements ActionListener
         Detener.setBounds(150,500,100,25);
         add(Detener);
 
+        //Derecha
+        add(grafico); 
+
+
         SelectorGenerador.addActionListener(this);
         SelectorFrontera.addActionListener(this);
         ejecutar.addActionListener(this);
         Reset.addActionListener(this);
-        Detener.addActionListener(this);
     }
 
     public void actionPerformed(ActionEvent e)
@@ -260,10 +240,8 @@ class LaminaSeleccion extends JPanel implements ActionListener
                         }
     
     */
-                        Runnable r = new ThreadAutomata(ca1DSim.automata,estados,transicion,generaciones,frontera,configuracion);
-                        t = new Thread(r);
-                        t.start();
-
+                        grafico.recargar(estados,transicion,generaciones,frontera,configuracion); 
+                        grafico.repaint();
                     }
                     
 
@@ -278,14 +256,11 @@ class LaminaSeleccion extends JPanel implements ActionListener
 
         if(e.getSource() == Reset)
         {
-            ca1DSim.automata.detener();
-            ca1DSim.automata.resetear();
-            ca1DSim.automata.paint(ca1DSim.automata.getGraphics());  
-        }
-
-        if(e.getSource() == Detener)
-        {
-            ca1DSim.automata.detener();    
+            grafico = new AutomataCelular();
+            grafico.setBounds(300,50,800,500);
+            add(grafico); 
+            grafico.repaint();
+            
         }
 
     }
@@ -295,69 +270,65 @@ class LaminaSeleccion extends JPanel implements ActionListener
 class AutomataCelular extends Canvas
 {
     //Combinaciones guarda en NArios la regla definida  
-    private static int[] data = new int[800];
-    private static int[] data2 = new int[800];
-    private static int[] temp;
+    private int[] data = new int[800];
+    private int[] data2 = new int[800];
+    private int[] temp;
 
-    private static int[] Combinaciones;
-    private static int k, regla, generaciones;
-    private static boolean frontera, configuracion, blanco, parar; 
+    private int[] Combinaciones;
+    private int k, regla, generaciones;
+    private boolean frontera, configuracion;
+
+    private boolean blanco;
 
     //Vecindad es igual a 1 indicado en la práctica
-    private static final int r = 1;
+    private final int r = 1;
 
-    
     public AutomataCelular()    
     {
         setBounds(325,50,800,500);        
-        setBackground(Color.green);
+        setBackground(Color.white);
         blanco = true;
     }
 
-
-    public static void recargar(int k_, int regla_, int generaciones_, boolean frontera_, boolean configuracion_)
+    public void recargar(int k_, int regla_, int generaciones_, boolean frontera_, boolean configuracion_)
     {
-        k = k_;
-        regla = regla_;
-        generaciones = generaciones_;
-        frontera = frontera_;
-        configuracion = configuracion_;
-        parar = false;
+        this.k = k_;
+        this.regla = regla_;
+        this.generaciones = generaciones_;
+        this.frontera = frontera_;
+        this.configuracion = configuracion_;
         blanco = false;
-        Combinaciones = new int[vecindades()];                
+        Combinaciones = new int[vecindades()];        
+         
         asignarRegla();
     }
     
-
     public void paint(Graphics g)
     {  
         super.paint(g);
+
         
         if(!blanco)
         {
             calcularCelulas(g);
+            //Image img = calcularCelulas();
+            //g.drawImage(img, 20,20,this);  
+
+        }     
+    }
+    
+    private static void pause(int delay) {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-
-        else{
-            setBackground(Color.green);
-        }
     }
-
-
-    public static void detener()
+    private void calcularCelulas(Graphics g)
     {
-        parar = true;
-    }
+        //BufferedImage bufferedImage = new BufferedImage(800,500, BufferedImage.TYPE_INT_RGB);
+        //Graphics g = bufferedImage.getGraphics();
 
-
-    public static void resetear()
-    {
-        blanco = true;
-    }
-
-
-    private static void calcularCelulas(Graphics g)
-    {
         int comb;
 
         for(int i = 0; i < 800; i++)
@@ -370,7 +341,7 @@ class AutomataCelular extends Canvas
         
         if(!frontera) //Si no hay frontera -> frontera nula
         {
-            for(int i = 0; i < generaciones && !parar; i++)
+            for(int i = 0; i < generaciones; i++)
             {
                 for(int j = 0; j < 800; j++)
                 {
@@ -468,57 +439,12 @@ class AutomataCelular extends Canvas
        //return bufferedImage;
     }
 
-    public static int[] getCombinaciones()
+    public int[] getCombinaciones()
     {
         return Combinaciones;
     }
 
-
-    public static long maxReglas(int estado, int vecindad)
-    {
-        long max = (long)Math.pow(estado,(2*vecindad)+1);
-        return (long)Math.pow(estado,max);
-    }
-
-
-    private static int vecindades()
-    {
-        //Hay k^(2*r + 1) vecindades dististas
-        //111 , 110, 101...
-        return (int)Math.pow(k,(2*r)+1);
-    }
-
-
-    public static int convertirNario(int N, int Nario)
-    {
-        int ret = 0, factor = 1;
-        while (N > 0) {
-            ret += N % Nario * factor;
-            N /= Nario;
-            factor *= 10;
-        }
-        return ret;
-        //return Integer.parseInt(Integer.toString(N,Nario));
-    }
-
-
-    public static int NarioDecimal(int N, int Nario)
-    {
-        String s = String.valueOf(N);
-        return (int)Integer.parseInt(s, Nario);
-    }
-        
-
-    private static void pause(int delay) {
-        try {
-            Thread.sleep(delay);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    private static void asignarRegla()
+    private void asignarRegla()
     {
         if(regla < reglasEvolucion())
         {
@@ -545,10 +471,52 @@ class AutomataCelular extends Canvas
         }
     }
     
-
     //Combinaciones entre las distintas vecindades
-    private static int reglasEvolucion()
+    private int reglasEvolucion()
     {        
         return (int)Math.pow(k,vecindades());
     }
+
+    public static long maxReglas(int estado, int vecindad)
+    {
+        long max = (long)Math.pow(estado,(2*vecindad)+1);
+        return (long)Math.pow(estado,max);
+    }
+
+    private int vecindades()
+    {
+        //Hay k^(2*r + 1) vecindades dististas
+        //111 , 110, 101...
+        return (int)Math.pow(k,(2*r)+1);
+    }
+
+    public static int convertirNario(int N, int Nario)
+    {
+        int ret = 0, factor = 1;
+        while (N > 0) {
+            ret += N % Nario * factor;
+            N /= Nario;
+            factor *= 10;
+        }
+        return ret;
+        //return Integer.parseInt(Integer.toString(N,Nario));
+    }
+
+    public static int NarioDecimal(int N, int Nario)
+    {
+        String s = String.valueOf(N);
+        return (int)Integer.parseInt(s, Nario);
+    }
 }
+/*
+class Dibujar extends Canvas
+{
+    Dibujar()
+    {
+
+    }
+
+    void paint()
+    {}
+}
+*/
