@@ -21,7 +21,7 @@ public class interfaz {
         //Menu superior
         LaminaMenu laminaM = new LaminaMenu();
         //Icono de la aplicación
-        ImageIcon icon = new ImageIcon("rocket.png");
+        ImageIcon icon = new ImageIcon("chip.png");
 
         //Ventana Principal
         JFrame frame = new JFrame();               
@@ -148,7 +148,7 @@ class LaminaMenu extends JMenuBar implements ActionListener
     private JMenuItem opc3 = new JMenuItem("Generador");       
     private SimuladorFrame opc3Frame = new SimuladorFrame();   
     private JMenuItem opc4 = new JMenuItem("Automata 1D");
-    private JFrame opc4Frame = new JFrame();   
+    private ca1DSim opc4Frame = new ca1DSim();   
 
     public LaminaMenu()
     {
@@ -189,8 +189,6 @@ class LaminaMenu extends JMenuBar implements ActionListener
         else if(e.getSource() == opc4)
         {
             opc4Frame.setVisible(true);
-            opc4Frame.setBounds(0,0,500,500);
-            opc4Frame.setTitle("Opcion 2");  
         }
     }
 }

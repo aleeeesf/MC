@@ -17,7 +17,8 @@ public class SimuladorFrame extends JFrame {
     private void iniciar()
     {       
         LaminaSeleccion1 lamina = new LaminaSeleccion1();
-                      
+        ImageIcon icon = new ImageIcon("shuffle.png");  
+        setIconImage(icon.getImage());              
         setTitle("Generador Num.Aleatorios");
         setBounds(200,200,300,300);
         setResizable(true);
