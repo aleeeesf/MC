@@ -42,7 +42,6 @@ public class CurvaHamming extends JFrame
 
         setBounds(0,0,1225,800);
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
         

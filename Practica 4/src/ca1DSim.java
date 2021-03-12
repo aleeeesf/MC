@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 public class ca1DSim extends JFrame {
     
@@ -111,6 +113,8 @@ class LaminaSeleccion extends JPanel implements ActionListener
     private JButton Detener = new JButton("Detener");  
     private JButton Reset = new JButton("Reset");
     private JButton HammingB = new JButton("Hamming");
+    private JButton Entropia = new JButton("Entropia");
+    private JButton EntropiaTemporal = new JButton("E. Temporal");
        
 
     private ArrayList<Long> randList = new ArrayList<Long>();
@@ -173,12 +177,20 @@ class LaminaSeleccion extends JPanel implements ActionListener
         HammingB.setBounds(25,375,100,25);
         add(HammingB);
 
+        Entropia.setBounds(150,375,100,25);
+        add(Entropia);
+
+        EntropiaTemporal.setBounds(80,425,120,25);
+        add(EntropiaTemporal);
+
         SelectorGenerador.addActionListener(this);
         SelectorFrontera.addActionListener(this);
         ejecutar.addActionListener(this);
         Reset.addActionListener(this);
         Detener.addActionListener(this);
         HammingB.addActionListener(this);
+        Entropia.addActionListener(this);
+        EntropiaTemporal.addActionListener(this);
     }
 
     public void actionPerformed(ActionEvent e)
@@ -336,6 +348,40 @@ class LaminaSeleccion extends JPanel implements ActionListener
             */
             new CurvaHamming(AutomataCelular.getCells());
         }
+
+        if(e.getSource() == Entropia)
+        {
+            int g[][] = new int[500][800];
+            g = AutomataCelular.getCells();
+            new CurvaEntropia(g,AutomataCelular.getEstadoActual());
+        }
+
+        if(e.getSource() == EntropiaTemporal)
+        {
+            String name = JOptionPane.showInputDialog("Introduce la celula a calcular");
+            int g[][] = new int[500][800];
+            g = AutomataCelular.getCells();
+            
+            try
+            {
+                int i = Integer.valueOf(name);
+                DecimalFormat df2 = new DecimalFormat("#.##");
+
+                if(i > 800)
+                {
+                    JOptionPane.showMessageDialog(null, "Límite máximo de 800",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+                JOptionPane.showMessageDialog(null,"La entropia de la celula es:"+df2.format(CurvaEntropia.CalcularEntropiaCelula(g,i,2)));                
+
+            }catch(Exception ex)
+            {
+                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Caracter invalido introducido. Compruebe los campos.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+            }            
+        }        
     }
 }
 
@@ -362,7 +408,6 @@ class AutomataCelular extends Canvas
     private static final int r = 1;
 
     public static final int ancho = 800, alto = 500;
-
     
     public AutomataCelular()    
     {
@@ -387,8 +432,7 @@ class AutomataCelular extends Canvas
             asignarRegla();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }
-        
+        }        
     }
     
 
@@ -406,10 +450,12 @@ class AutomataCelular extends Canvas
         }
     }
 
+
     public static int[][] getCells()
     {
         return Cells;
     }
+
 
     //Rellena la primera fila de células de número aleatorios
     public static void rellenarCelulasAleatorias(ArrayList<Long> list, int k)
@@ -421,6 +467,7 @@ class AutomataCelular extends Canvas
             data[i] = aux.intValue(); 
         }
     }
+
 
     //Rellena la primera fila a 0 y la central a k-1 (Celula Central Activa)
     public static void rellenarCelulas(int celula_central)
@@ -434,6 +481,7 @@ class AutomataCelular extends Canvas
         data[ancho/2] = celula_central-1; //Sería k-1 
     }
 
+
     public static void detener()
     {
         parar = true;
@@ -443,6 +491,13 @@ class AutomataCelular extends Canvas
     public static void resetear()
     {
         blanco = true;
+        Cells = new int[500][800];
+    }
+
+
+    public static int getEstadoActual()
+    {
+        return k;
     }
 
 
@@ -562,7 +617,7 @@ class AutomataCelular extends Canvas
                     }
                 }                
                 
-                Cells[i] = data;
+                Cells[i] = data.clone();
                 pause(25);  //Mostramos las líneas más lento
 
                 temp=data;  //Intercambiamos las filas
