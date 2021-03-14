@@ -29,8 +29,8 @@ public class ca1DSim extends JFrame {
         setBounds(100,100,1200,700);
         setResizable(false);
         setLayout(null);
-        setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
+        //setVisible(true);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
         
         add(lamina); 
         add(automata);         
@@ -38,7 +38,7 @@ public class ca1DSim extends JFrame {
 
     public static void main(String[] args)
     {     
-        new ca1DSim();
+        //new ca1DSim();
     }
 
 }
@@ -333,27 +333,12 @@ class LaminaSeleccion extends JPanel implements ActionListener
 
         if(e.getSource() == HammingB)
         {
-            int g[][] = new int[500][800];
-            g = AutomataCelular.getCells();
-
-            /*
-            for(int i = 0; i < 30; i++)
-            {
-                for(int j = 0; j < 20; j++)
-                {
-                    System.out.print(g[i][j]+" ");
-                }
-                System.out.println();
-            }
-            */
             new CurvaHamming(AutomataCelular.getCells());
         }
 
         if(e.getSource() == Entropia)
         {
-            int g[][] = new int[500][800];
-            g = AutomataCelular.getCells();
-            new CurvaEntropia(g,AutomataCelular.getEstadoActual());
+            new CurvaEntropia(AutomataCelular.getCells(),AutomataCelular.getEstadoActual());
         }
 
         if(e.getSource() == EntropiaTemporal)
@@ -367,13 +352,14 @@ class LaminaSeleccion extends JPanel implements ActionListener
                 int i = Integer.valueOf(name);
                 DecimalFormat df2 = new DecimalFormat("#.##");
 
-                if(i > 800)
+                if(i > 800 || i < 0)
                 {
                     JOptionPane.showMessageDialog(null, "Límite máximo de 800",
                     "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
-                JOptionPane.showMessageDialog(null,"La entropia de la celula es:"+df2.format(CurvaEntropia.CalcularEntropiaCelula(g,i,2)));                
+                JOptionPane.showMessageDialog(null,"La entropia de la celula es:"+
+                    df2.format(CurvaEntropia.CalcularEntropiaCelula(g,i,AutomataCelular.getEstadoActual())));                
 
             }catch(Exception ex)
             {
@@ -407,7 +393,10 @@ class AutomataCelular extends Canvas
     //Vecindad es igual a 1 indicado en la práctica
     private static final int r = 1;
 
+    private static int filasComputadas = 1;
+
     public static final int ancho = 800, alto = 500;
+
     
     public AutomataCelular()    
     {
@@ -450,12 +439,17 @@ class AutomataCelular extends Canvas
         }
     }
 
-
+    //Devuelve las células almacenadas en una matriz
     public static int[][] getCells()
     {
         return Cells;
     }
 
+    //Número de filas que son computadas/mostradas en pantalla
+    public static int getFilasComputadas()
+    {
+        return filasComputadas;
+    }
 
     //Rellena la primera fila de células de número aleatorios
     public static void rellenarCelulasAleatorias(ArrayList<Long> list, int k)
@@ -492,6 +486,7 @@ class AutomataCelular extends Canvas
     {
         blanco = true;
         Cells = new int[500][800];
+        filasComputadas = 1;
     }
 
 
@@ -500,10 +495,11 @@ class AutomataCelular extends Canvas
         return k;
     }
 
-
+    //Núcleo del autómata celular
     private static void calcularCelulas(Graphics g)
     {
         int comb,value;
+        filasComputadas = 1;
 
         if(!frontera) //Si no hay frontera -> frontera nula
         {
@@ -562,6 +558,8 @@ class AutomataCelular extends Canvas
                 temp=data;
                 data=data2;
                 data2=temp;	
+
+                filasComputadas++;
             }
         }
 
@@ -623,6 +621,8 @@ class AutomataCelular extends Canvas
                 temp=data;  //Intercambiamos las filas
                 data=data2;
                 data2=temp;	
+
+                filasComputadas++;
             }
         }
     }

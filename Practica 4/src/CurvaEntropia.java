@@ -1,12 +1,6 @@
 import java.awt.*;
-import java.io.*;
-import java.util.Random;
 import java.lang.Math;
-
 import javax.swing.*;
-import javax.imageio.ImageIO;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 
 public class CurvaEntropia extends JFrame
@@ -41,6 +35,7 @@ public class CurvaEntropia extends JFrame
         setBounds(0,0,1225,800);
         setVisible(true);
         setLayout(null);
+        setResizable(false);
 
         
         //Textos que se presentan en el frame
@@ -88,7 +83,7 @@ public class CurvaEntropia extends JFrame
         xUno.setBounds(290,690,25,25);
         add(xUno);
         
-        CalcularEntropia(2);
+        CalcularEntropia(k);
 
         grafico.setArray(Entropia);
         grafico.blanco = false;
@@ -109,7 +104,7 @@ public class CurvaEntropia extends JFrame
     {
         double[] contador = new double[k];
 
-        for(int i = 0; i < AutomataCelular.alto; i++)
+        for(int i = 0; i <  AutomataCelular.getFilasComputadas()-1; i++)
         {
             for(int j = 0; j < AutomataCelular.ancho; j++)
             {
@@ -120,8 +115,7 @@ public class CurvaEntropia extends JFrame
                 contador[m] /= AutomataCelular.ancho; 
                 Entropia[i] += -(contador[m]*log(contador[m],k));                  
                 contador[m] = 0;                
-            }  
-            //System.out.println(Entropia[i]);                   
+            }                   
         }
     }
 
@@ -130,31 +124,25 @@ public class CurvaEntropia extends JFrame
         double[] contador = new double[k];
         double entropiaCelula = 0.0;
          
-        for(int i = 0; i < AutomataCelular.alto; i++)
+        for(int i = 0; i <  AutomataCelular.getFilasComputadas()-1; i++)
         {
             contador[v[i][j]]++;                
         }
 
         for(int m = 0; m < k; m++)
-        {
-            System.out.println(contador[m]);   
-            contador[m] /= AutomataCelular.alto; 
-            entropiaCelula += -(contador[m]*log(contador[m],k));     
-                         
-        } 
-       
+        {              
+            contador[m] /= (AutomataCelular.getFilasComputadas()-1); 
+            entropiaCelula += -(contador[m]*log(contador[m],k));                                
+        }       
+
        return entropiaCelula;
     }
 
-
     public static double log(double N, int k)
     {
-        return (double)(Math.log(N)/Math.log(k));
-    }
-
-    public static void main(String args[])
-    {
-        //new CurvaEntropia();
+        if(N != 0.0)
+            return (double)(Math.log(N)/Math.log(k));
+        else return 0;
     }
 }
 
@@ -180,6 +168,7 @@ class GraficoEntropia extends Canvas
         if(!blanco)
         {
             int x1, y1, x2, y2;
+
             //Rectas en eje x
             g.drawLine(0,120,1000,120);
             g.drawLine(0,240,1000,240);
@@ -195,7 +184,7 @@ class GraficoEntropia extends Canvas
             g.drawLine(800,0,800,600);
             g.drawLine(1000,0,1000,600);
 
-            for(int i = 1; i < AutomataCelular.alto; i++)
+            for(int i = 1; i <  AutomataCelular.getFilasComputadas()-1; i++)
             {
                 x1 = (int)(((i-1)*10)*0.2);
                 x2 = (int)((i*10)*0.2);
@@ -203,9 +192,7 @@ class GraficoEntropia extends Canvas
                 y2 = (int)(600-((Entropia[i]*1000)*0.6));
                 g.setColor(Color.red);
                 g.drawLine(x1,y1,x2,y2);
-                System.out.println(Entropia[i-1]);
-
-            }        
+            }
         }
     }
 }

@@ -1,12 +1,5 @@
 import java.awt.*;
-import java.io.*;
-import java.util.Random;
-
 import javax.swing.*;
-import javax.imageio.ImageIO;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 
 public class CurvaHamming extends JFrame
 {
@@ -40,9 +33,11 @@ public class CurvaHamming extends JFrame
     {
         this.Celulas = C;
 
+        
         setBounds(0,0,1225,800);
-        setVisible(true);
         setLayout(null);
+        setResizable(false);
+        setVisible(true);
 
         
         //Textos que se presentan en el frame
@@ -120,7 +115,7 @@ public class CurvaHamming extends JFrame
     {
         int diferencia;
 
-        for(int i = 1; i < AutomataCelular.alto;i++)
+        for(int i = 1; i < AutomataCelular.getFilasComputadas()-1;i++)
         {
             diferencia = 0;
 
@@ -188,7 +183,7 @@ class HammingGrafico extends Canvas
 
 
 
-            for(int i = 1; i < AutomataCelular.alto; i++)
+            for(int i = 1; i < AutomataCelular.getFilasComputadas()-1; i++)
             {
                 x1 = (int)(((i-1)*10)*0.2);
                 x2 = (int)((i*10)*0.2);
